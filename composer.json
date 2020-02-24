@@ -1,0 +1,15 @@
+{
+    "name": "andreeasabadis/mvc-framework-skeleton",
+    "authors": [
+        {
+            "name": "Andreea Sabadis",
+            "email": "andreea.sabadis@evozon.com"
+        }
+    ],
+    "require": {
+        "psr/http-message": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {"Framework\\": "src/"}
+    }
+}
