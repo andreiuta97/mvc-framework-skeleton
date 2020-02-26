@@ -32,6 +32,19 @@ class Request implements RequestInterface
         //TODO
     }
 
+    public function getPath(): string
+    {
+        return '/user/1/setRole/ADMIN';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMethod()
+    {
+        return "GET";
+    }
+
     // TODO: implement methods declared by RequestInterface
 
     /**
@@ -136,14 +149,6 @@ class Request implements RequestInterface
     public function withRequestTarget($requestTarget)
     {
         // TODO: Implement withRequestTarget() method.
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getMethod()
-    {
-        // TODO: Implement getMethod() method.
     }
 
     /**
