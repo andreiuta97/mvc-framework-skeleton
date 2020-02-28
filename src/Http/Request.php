@@ -16,6 +16,7 @@ class Request extends Message
      * @var UriInterface
      */
     private $uri;
+    private $requestTarget;
 
     /**
      * Request constructor.
@@ -46,14 +47,14 @@ class Request extends Message
         $protocolVersion = $_SERVER['SERVER_PROTOCOL'];
         $httpMethod = $_SERVER['REQUEST_METHOD'];
         $uri = Uri::createFromGlobals();
-        $body = new Stream(fopen('php://input','r'));
+        $body = new Stream(fopen('php://input', 'r'));
 
-        $request = new self($protocolVersion,$httpMethod,$uri,$body);
-        foreach($_SERVER as $variableName => $variableValue){
-            if(strpos($variableName,'HTTP_') !== 0) {
+        $request = new self($protocolVersion, $httpMethod, $uri, $body);
+        foreach ($_SERVER as $variableName => $variableValue) {
+            if (strpos($variableName, 'HTTP_') !== 0) {
                 continue;
             }
-            $request->addRawHeader($variableName,$variableValue);
+            $request->addRawHeader($variableName, $variableValue);
         }
 
         return $request;
@@ -91,12 +92,10 @@ class Request extends Message
      */
     public function getRequestTarget()
     {
-        /*
-        if($this->requestTarget){
+        if ($this->requestTarget) {
             return $this->requestTarget;
         }
-        */
-        if($this->uri){
+        if ($this->uri) {
             return $this->uri->__toString();
         }
         return '/';
@@ -107,7 +106,10 @@ class Request extends Message
      */
     public function withRequestTarget($requestTarget)
     {
-        // TODO: Implement withRequestTarget() method.
+        $request = clone $this;
+        $request->requestTarget = $requestTarget;
+
+        return $request;
     }
 
     /**

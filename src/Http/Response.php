@@ -23,7 +23,7 @@ class Response extends Message
      * @param int $statusCode
      * @param string $reasonPhrase
      */
-    public function __construct(StreamInterface $body, string $protocolVersion= '1.1', int $statusCode=200, string $reasonPhrase = '')
+    public function __construct(StreamInterface $body, string $protocolVersion = '1.1', int $statusCode = 200, string $reasonPhrase = '')
     {
         parent::__construct($protocolVersion, $body);
         $this->statusCode = $statusCode;
@@ -73,6 +73,7 @@ class Response extends Message
     {
         $response = clone $this;
         $response->statusCode = $code;
+        $response->reasonPhrase = $reasonPhrase;
 
         return $response;
     }

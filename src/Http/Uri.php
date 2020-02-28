@@ -48,7 +48,7 @@ class Uri implements UriInterface
     {
         $scheme = $_SERVER['REQUEST_SCHEME'];
         $host = $_SERVER['HTTP_HOST'];
-        $port = (int) $_SERVER['SERVER_PORT'];
+        $port = (int)$_SERVER['SERVER_PORT'];
         $path = $_SERVER['REQUEST_URI'];
         $query = $_SERVER['QUERY_STRING'];
 
@@ -69,7 +69,15 @@ class Uri implements UriInterface
      */
     public function getAuthority()
     {
-        return $this->getUserInfo() . '@' . $this->host . ':' . $this->port;
+        $authority='';
+        if($this->getUserInfo()){
+            $authority.=$this->getUserInfo();
+        }
+        $authority.='@'.$this->host;
+        if($this->port){
+            $authority.=':'.$this->port;
+        }
+        return $authority;
     }
 
     /**
@@ -77,7 +85,14 @@ class Uri implements UriInterface
      */
     public function getUserInfo()
     {
-        return $this->user . ':' . $this->password;
+        $userInfo = '';
+        if ($this->user) {
+            $userInfo .= $this->user;
+            if ($this->password) {
+                $userInfo .= ':' . $this->password;
+            }
+        }
+        return $userInfo;
     }
 
     /**
@@ -138,11 +153,9 @@ class Uri implements UriInterface
     {
         $request = clone $this;
         $request->getUserInfo();
-        //$request->user = $user;
         if ($password == NULL) {
             $request->password = '';
         }
-        //$request->password = $password;
 
         return $request;
     }
