@@ -4,6 +4,7 @@ namespace Framework\Router;
 
 use Framework\Contracts\RouterInterface;
 use Framework\Exceptions\BadRouteConfigException;
+use Framework\Exceptions\RouteNotFoundException;
 use Framework\Http\Request;
 use Framework\Routing\RouteMatch;
 
@@ -32,6 +33,7 @@ class Router implements RouterInterface
      * @param Request $request
      * @return RouteMatch
      * @throws BadRouteConfigException
+     * @throws RouteNotFoundException
      */
     public function route(Request $request): RouteMatch
     {
@@ -42,6 +44,11 @@ class Router implements RouterInterface
             }
 
             preg_match($this->createPath($routeConfig[self::CONFIG_KEY_PATH]), $request->getUri()->getPath(), $matches);
+
+            if (empty($matches)){
+                throw new RouteNotFoundException($request->getUri()->getPath());
+            }
+
             if ($matches && $routeConfig[self::CONFIG_KEY_METHOD] === $request->getMethod()) {
                 return new RouteMatch(
                     $request->getMethod(),
@@ -50,8 +57,8 @@ class Router implements RouterInterface
                     $this->createRequestAttributes($this->createPath($routeConfig[self::CONFIG_KEY_PATH]), $request->getUri()->getPath())
                 );
             }
+            throw new RouteNotFoundException($request->getUri()->getPath());
         }
-        return null;
     }
 
     /**
