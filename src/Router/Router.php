@@ -37,13 +37,13 @@ class Router implements RouterInterface
                 throw new BadRouteConfigException($routeName, $routeConfig);
             }
 
-            preg_match($this->createPath($routeConfig[self::CONFIG_KEY_PATH]), $request->getPath(), $matches);
+            preg_match($this->createPath($routeConfig[self::CONFIG_KEY_PATH]), $request->getUri()->getPath(), $matches);
             if ($matches && $routeConfig[self::CONFIG_KEY_METHOD] === $request->getMethod()) {
                 return new RouteMatch(
                     $request->getMethod(),
-                    $this->getControllerName($routeConfig[self::CONFIG_KEY_CONTROLLER]),
+                    $routeConfig[self::CONFIG_KEY_CONTROLLER],
                     $routeConfig[self::CONFIG_KEY_ACTION],
-                    $this->createRequestAttributes($this->createPath($routeConfig[self::CONFIG_KEY_PATH]), $request->getPath())
+                    $this->createRequestAttributes($this->createPath($routeConfig[self::CONFIG_KEY_PATH]), $request->getUri()->getPath())
                 );
             }
         }
@@ -77,14 +77,6 @@ class Router implements RouterInterface
         }
 
         return $requestAttributes;
-    }
-
-    private function getControllerName(string $controllerName): string
-    {
-        $namespace = $this->routerConfig['controller_namespace'] . '\\';
-        $suffix = $this->routerConfig['controller_suffix'];
-
-        return $namespace . ucfirst($controllerName) . $suffix;
     }
 
     private function validateRoute(array $routeConfig): bool

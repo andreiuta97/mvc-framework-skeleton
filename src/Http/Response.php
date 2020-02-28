@@ -5,8 +5,18 @@ namespace Framework\Http;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
-class Response implements ResponseInterface
+class Response extends Message
 {
+    private $statusCode;
+    private $reasonPhrase;
+
+    public function __construct(StreamInterface $body, string $protocolVersion= '1.1', int $statusCode=200, string $reasonPhrase = '')
+    {
+        parent::__construct($protocolVersion, $body);
+        $this->statusCode = $statusCode;
+        $this->reasonPhrase = $reasonPhrase;
+    }
+
     public function send(): void
     {
         $this->sendHeaders();
@@ -15,110 +25,23 @@ class Response implements ResponseInterface
 
     private function sendHeaders(): void
     {
-        // TODO: use header() PHP function here to send the response headers added to this response
+        foreach ($this->headers as $key => $value) {
+            header($key, implode(', ', $value));
+        }
     }
 
     private function sendBody(): void
     {
-        // TODO: just print the content of the response
+        echo $this->getBody()->getContents();
     }
 
-    // TODO: implement methods declared by ResponseInterface
-
-    /**
-     * @inheritDoc
-     */
-    public function getProtocolVersion()
-    {
-        // TODO: Implement getProtocolVersion() method.
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function withProtocolVersion($version)
-    {
-        // TODO: Implement withProtocolVersion() method.
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getHeaders()
-    {
-        // TODO: Implement getHeaders() method.
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function hasHeader($name)
-    {
-        // TODO: Implement hasHeader() method.
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getHeader($name)
-    {
-        // TODO: Implement getHeader() method.
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getHeaderLine($name)
-    {
-        // TODO: Implement getHeaderLine() method.
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function withHeader($name, $value)
-    {
-        // TODO: Implement withHeader() method.
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function withAddedHeader($name, $value)
-    {
-        // TODO: Implement withAddedHeader() method.
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function withoutHeader($name)
-    {
-        // TODO: Implement withoutHeader() method.
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getBody()
-    {
-        // TODO: Implement getBody() method.
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function withBody(StreamInterface $body)
-    {
-        // TODO: Implement withBody() method.
-    }
 
     /**
      * @inheritDoc
      */
     public function getStatusCode()
     {
-        // TODO: Implement getStatusCode() method.
+        return $this->statusCode;
     }
 
     /**
@@ -126,7 +49,10 @@ class Response implements ResponseInterface
      */
     public function withStatus($code, $reasonPhrase = '')
     {
-        // TODO: Implement withStatus() method.
+        $response = clone $this;
+        $response->statusCode = $code;
+
+        return $response;
     }
 
     /**
@@ -134,6 +60,6 @@ class Response implements ResponseInterface
      */
     public function getReasonPhrase()
     {
-        // TODO: Implement getReasonPhrase() method.
+        return $this->reasonPhrase;
     }
 }
