@@ -5,6 +5,7 @@ use Framework\Http\Request;
 use Framework\Router\Router;
 use Framework\Dispatcher\Dispatcher;
 use Framework\Renderer\Renderer;
+use Framework\Controller\UserController;
 
 ini_set('display_errors', true);
 
@@ -20,8 +21,8 @@ try {
     $config = require $baseDir . '/config/config.php';
     $router = new Router($config['router']);
     $request = Request::createFromGlobals();
-    $renderer = new Renderer('');
-    $userController = new \Framework\Controller\UserController($renderer);
+    $renderer = new Renderer($config['renderer'][Renderer::CONFIG_KEY_BASE_VIEW_PATH]);
+    $userController = new UserController($renderer);
     $dispatcher = new Dispatcher($config['dispatcher']);
     $dispatcher->addController($userController);
     //instantiez controller
@@ -37,10 +38,8 @@ try {
 
 /*$stream =  \Framework\Http\Stream::createFromString('abc');
 var_dump($stream->getContents());
-
 //$uri = new \Framework\Http\Uri('http', 'abc', 'abc1', 'wwww.abc.com', 80, '/user/1', 'y=3', 'vbdf');
 //echo $uri;
-
 $request = \Framework\Http\Request::createFromGlobals();
 var_dump($request);
 */
@@ -53,5 +52,3 @@ var_dump($request);
 //$request = Request::createFromGlobals();
 //$response = $application->handle($request);
 //$response->send();
-
-

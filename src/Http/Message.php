@@ -9,10 +9,24 @@ use Psr\Http\Message\StreamInterface;
 
 class Message implements MessageInterface
 {
+    /**
+     * @var string
+     */
     protected $protocolVersion;
+    /**
+     * @var array
+     */
     protected $headers;
+    /**
+     * @var StreamInterface|null
+     */
     protected $body;
 
+    /**
+     * Message constructor.
+     * @param string $protocolVersion
+     * @param StreamInterface|null $body
+     */
     public function __construct
     (
         string $protocolVersion,
@@ -110,6 +124,12 @@ class Message implements MessageInterface
 
     }
 
+    /**
+     * Adds a header (key => value) to the headers
+     * @param $name
+     * @param $value
+     * @return $this
+     */
     public function addRawHeader($name, $value)
     {
         $name = ucwords(strtolower(strtr(substr($name, 5), '_', '-')), '-');

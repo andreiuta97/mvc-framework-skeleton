@@ -40,13 +40,16 @@ class Uri implements UriInterface
         $this->fragment = $fragment;
     }
 
+    /**
+     * Constructs an Uri from global variables
+     * @return Uri
+     */
     public static function createFromGlobals()
     {
         $scheme = $_SERVER['REQUEST_SCHEME'];
         $host = $_SERVER['HTTP_HOST'];
         $port = (int) $_SERVER['SERVER_PORT'];
-        $val = explode('?', $_SERVER['REQUEST_URI']);
-        $path = $val[0];
+        $path = $_SERVER['REQUEST_URI'];
         $query = $_SERVER['QUERY_STRING'];
 
 
@@ -56,8 +59,7 @@ class Uri implements UriInterface
     /**
      * @inheritDoc
      */
-    public
-    function getScheme()
+    public function getScheme()
     {
         return $this->scheme;
     }
@@ -65,8 +67,7 @@ class Uri implements UriInterface
     /**
      * @inheritDoc
      */
-    public
-    function getAuthority()
+    public function getAuthority()
     {
         return $this->getUserInfo() . '@' . $this->host . ':' . $this->port;
     }
@@ -74,8 +75,7 @@ class Uri implements UriInterface
     /**
      * @inheritDoc
      */
-    public
-    function getUserInfo()
+    public function getUserInfo()
     {
         return $this->user . ':' . $this->password;
     }
@@ -83,8 +83,7 @@ class Uri implements UriInterface
     /**
      * @inheritDoc
      */
-    public
-    function getHost()
+    public function getHost()
     {
         return $this->host;
     }
@@ -92,8 +91,7 @@ class Uri implements UriInterface
     /**
      * @inheritDoc
      */
-    public
-    function getPort()
+    public function getPort()
     {
         return $this->port;
     }
@@ -101,8 +99,7 @@ class Uri implements UriInterface
     /**
      * @inheritDoc
      */
-    public
-    function getPath()
+    public function getPath()
     {
         return $this->path;
     }
@@ -110,8 +107,7 @@ class Uri implements UriInterface
     /**
      * @inheritDoc
      */
-    public
-    function getQuery()
+    public function getQuery()
     {
         return $this->query;
     }
@@ -119,8 +115,7 @@ class Uri implements UriInterface
     /**
      * @inheritDoc
      */
-    public
-    function getFragment()
+    public function getFragment()
     {
         return $this->fragment;
     }
@@ -128,8 +123,7 @@ class Uri implements UriInterface
     /**
      * @inheritDoc
      */
-    public
-    function withScheme($scheme)
+    public function withScheme($scheme)
     {
         $request = clone $this;
         $request->scheme = $scheme;
@@ -140,8 +134,7 @@ class Uri implements UriInterface
     /**
      * @inheritDoc
      */
-    public
-    function withUserInfo($user, $password = null)
+    public function withUserInfo($user, $password = null)
     {
         $request = clone $this;
         $request->getUserInfo();
@@ -157,8 +150,7 @@ class Uri implements UriInterface
     /**
      * @inheritDoc
      */
-    public
-    function withHost($host)
+    public function withHost($host)
     {
         $request = clone $this;
         $request->host = $host;
@@ -169,8 +161,7 @@ class Uri implements UriInterface
     /**
      * @inheritDoc
      */
-    public
-    function withPort($port)
+    public function withPort($port)
     {
         $request = clone $this;
         $request->port = $port;
@@ -181,8 +172,7 @@ class Uri implements UriInterface
     /**
      * @inheritDoc
      */
-    public
-    function withPath($path)
+    public function withPath($path)
     {
         $request = clone $this;
         $request->path = $path;
@@ -193,8 +183,7 @@ class Uri implements UriInterface
     /**
      * @inheritDoc
      */
-    public
-    function withQuery($query)
+    public function withQuery($query)
     {
         $request = clone $this;
         $request->query = $query;
@@ -205,8 +194,7 @@ class Uri implements UriInterface
     /**
      * @inheritDoc
      */
-    public
-    function withFragment($fragment)
+    public function withFragment($fragment)
     {
         $request = clone $this;
         $request->fragment = $fragment;
@@ -217,8 +205,7 @@ class Uri implements UriInterface
     /**
      * @inheritDoc
      */
-    public
-    function __toString()
+    public function __toString()
     {
         return
             (!empty($this->scheme) ? $this->scheme . '://' : '') .

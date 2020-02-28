@@ -19,6 +19,10 @@ class Router implements RouterInterface
      */
     private $routerConfig;
 
+    /**
+     * Router constructor.
+     * @param array $routerConfig
+     */
     public function __construct(array $routerConfig)
     {
         $this->routerConfig = $routerConfig;
@@ -47,25 +51,25 @@ class Router implements RouterInterface
                 );
             }
         }
+        return null;
     }
 
+    /**
+     * Constructs the path as a regex
+     * @param string $path
+     * @return string
+     */
     public function createPath(string $path)
     {
-        /*$var = Array();
-        $var = explode('/\//', $path);
-        foreach ($var as $value) {
-            if(is_numeric($value)) {
-                $value = '(?<id>\d+)';
-            }
-            if($value == 'ADMIN' || $value == 'GUEST') {
-                $value = '(?<role>(ADMIN|GUEST))';
-            }
-            return $var;
-        }
-        print_r($var);*/
         return '/^' . str_replace('/', '\/', $path) . '$/';
     }
 
+    /**
+     * Creates an array with the request attributes
+     * @param string $path
+     * @param string $request
+     * @return array
+     */
     public function createRequestAttributes(string $path, string $request): array
     {
         preg_match($path, $request, $matches);
@@ -79,6 +83,11 @@ class Router implements RouterInterface
         return $requestAttributes;
     }
 
+    /**
+     * Verifies if a Route has all argumentsw
+     * @param array $routeConfig
+     * @return bool
+     */
     private function validateRoute(array $routeConfig): bool
     {
         return array_key_exists(self::CONFIG_KEY_METHOD, $routeConfig) &&

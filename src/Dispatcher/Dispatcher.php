@@ -1,4 +1,5 @@
 <?php
+
 namespace Framework\Dispatcher;
 
 use Framework\Contracts\DispatcherInterface;
@@ -9,15 +10,30 @@ use Framework\Http\Response;
 
 class Dispatcher implements DispatcherInterface
 {
+    const CONFIG_CONTROLLER_NAMESPACE = 'controller_namespace';
+    const CONFIG_CONTROLLER_SUFFIX = 'controller_suffix';
+
+    /**
+     * @var mixed
+     */
     private $controllerNamespace;
+    /**
+     * @var mixed
+     */
     private $controllerSuffix;
+    /**
+     * @var array
+     */
     private $controllers = [];
 
+    /**
+     * Dispatcher constructor.
+     * @param array $config
+     */
     public function __construct(array $config)
     {
-        //TODO use constants for array keys
-        $this->controllerNamespace = $config['controller_namespace'];
-        $this->controllerSuffix = $config['controller_suffix'];
+        $this->controllerNamespace = $config[self::CONFIG_CONTROLLER_NAMESPACE];
+        $this->controllerSuffix = $config[self::CONFIG_CONTROLLER_SUFFIX];
     }
 
     /**
@@ -25,30 +41,31 @@ class Dispatcher implements DispatcherInterface
      */
     public function dispatch(RouteMatch $routeMatch, Request $request): Response
     {
-        // 1. nume controller pe route, namespace, suffix = FQN
         $FQCN = $this->controllerNamespace . '\\' . ucfirst($routeMatch->getControllerName()) . $this->controllerSuffix;
-        // 2. Identifica controllerul
         $controller = $this->getController($FQCN);
-        // 2. cheama o metoda din routeMatch
         $action = $routeMatch->getActionName();
 
         return $controller->$action($request, $routeMatch->getRequestAttributes());
     }
 
+    /**
+     * Adds a controller to the controllers list
+     * @param AbstractController $controller
+     */
     public function addController(AbstractController $controller)
     {
         $this->controllers[] = $controller;
     }
 
-    private function getFQCN(string $controllerName, string $controllerSuffix): string
-    {
-        return $controllerName . '\\' . ucfirst($controllerName) . $controllerSuffix;
-    }
-
+    /**
+     * Returns a controller with a given name from controllers list
+     * @param string $controllerName
+     * @return mixed
+     */
     private function getController(string $controllerName)
     {
-        foreach($this->controllers as $controller) {
-            if($controllerName === get_class($controller)) {
+        foreach ($this->controllers as $controller) {
+            if ($controllerName === get_class($controller)) {
                 return $controller;
             }
         }

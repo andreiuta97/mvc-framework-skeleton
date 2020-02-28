@@ -8,9 +8,22 @@ use Psr\Http\Message\UriInterface;
 
 class Request extends Message
 {
+    /**
+     * @var string
+     */
     private $httpMethod;
+    /**
+     * @var UriInterface
+     */
     private $uri;
 
+    /**
+     * Request constructor.
+     * @param string $protocolVersion
+     * @param string $httpMethod
+     * @param UriInterface $uri
+     * @param StreamInterface $body
+     */
     public function __construct
     (
         string $protocolVersion,
@@ -23,6 +36,11 @@ class Request extends Message
         $this->httpMethod = $httpMethod;
         $this->uri = $uri;
     }
+
+    /**
+     * Creates a Request using the global variables
+     * @return static
+     */
     public static function createFromGlobals(): self
     {
         $protocolVersion = $_SERVER['SERVER_PROTOCOL'];
@@ -41,16 +59,27 @@ class Request extends Message
         return $request;
     }
 
+    /**
+     * @param string $name
+     * @return mixed
+     */
     public function getParameter(string $name)
     {
         return $_GET[$name];
     }
 
+    /**
+     * @param string $name
+     * @return mixed
+     */
     public function getCookie(string $name)
     {
         return $_COOKIE[$name];
     }
 
+    /**
+     * @param string $path
+     */
     public function moveUploadedFile(string $path)
     {
         //TODO

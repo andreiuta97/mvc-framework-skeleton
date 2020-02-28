@@ -15,18 +15,40 @@ class Stream implements StreamInterface
      * @var false|resource
      */
     private $stream;
+    /**
+     * @var int|null
+     */
     private $size;
+    /**
+     * @var bool
+     */
     private $writable;
+    /**
+     * @var bool
+     */
     private $readable;
+    /**
+     * @var bool
+     */
     private $seekable;
 
-    public function __construct($handler, int $size = null)
+    /**
+     * Stream constructor.
+     * @param $handler
+     * @param int|null $size
+     */
+    public function __construct($handler, ?int $size = null)
     {
         $this->stream = $handler;
         $this->size = $size;
         $this->writable = $this->readable = $this->seekable = true;
     }
 
+    /**
+     * Creates a temporary Stream
+     * @param string $content
+     * @return static
+     */
     public static function createFromString(string $content): self
     {
         $stream = fopen(sprintf("php://temp/maxmemory:%s", self::DEFAULT_MEMORY), self::DEFAULT_MODE);
@@ -39,8 +61,6 @@ class Stream implements StreamInterface
      */
     public function __toString()
     {
-        //fseek() spre pointer 0
-        //fread($this->stream, )
         rewind($this->stream);
         fread($this->stream, $this->getSize());
     }
@@ -59,7 +79,6 @@ class Stream implements StreamInterface
      */
     public function detach()
     {
-        //close care verifica daca exista stream
         if (is_resource($this->stream)) {
             fclose($this->stream);
         }
@@ -79,7 +98,6 @@ class Stream implements StreamInterface
      */
     public function tell()
     {
-        //imi zice unde e pointerul
         return ftell($this->stream);
     }
 
@@ -88,8 +106,6 @@ class Stream implements StreamInterface
      */
     public function eof()
     {
-        //verifica daca poiterul nu e la sf stringului
-        //feof();
         return feof($this->stream);
     }
 
@@ -106,7 +122,6 @@ class Stream implements StreamInterface
      */
     public function seek($offset, $whence = SEEK_SET)
     {
-        // ii dau eu o valoare pt poiner si mi-l muta acolo
         fseek($this->stream, $offset, SEEK_CUR);
     }
 
@@ -115,9 +130,6 @@ class Stream implements StreamInterface
      */
     public function rewind()
     {
-        // = fseek(0)
-        // mut pointerul la inceputul stringului
-        //fseek($this->stream, 0);
         rewind($this->stream);
     }
 
