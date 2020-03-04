@@ -45,10 +45,6 @@ class Router implements RouterInterface
 
             preg_match($this->createPath($routeConfig[self::CONFIG_KEY_PATH]), $request->getUri()->getPath(), $matches);
 
-            if (empty($matches)){
-                throw new RouteNotFoundException($request->getUri()->getPath());
-            }
-
             if ($matches && $routeConfig[self::CONFIG_KEY_METHOD] === $request->getMethod()) {
                 return new RouteMatch(
                     $request->getMethod(),
@@ -57,8 +53,8 @@ class Router implements RouterInterface
                     $this->createRequestAttributes($this->createPath($routeConfig[self::CONFIG_KEY_PATH]), $request->getUri()->getPath())
                 );
             }
-            throw new RouteNotFoundException($request->getUri()->getPath());
         }
+        throw new RouteNotFoundException($request->getUri()->getPath());
     }
 
     /**
@@ -91,7 +87,7 @@ class Router implements RouterInterface
     }
 
     /**
-     * Verifies if a Route has all argumentsw
+     * Verifies if a Route has all arguments
      * @param array $routeConfig
      * @return bool
      */

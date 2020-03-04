@@ -17,6 +17,8 @@ class Request extends Message
      */
     private $uri;
     private $requestTarget;
+    private $cookies;
+    private $parameters;
 
     /**
      * Request constructor.
@@ -24,18 +26,24 @@ class Request extends Message
      * @param string $httpMethod
      * @param UriInterface $uri
      * @param StreamInterface $body
+     * @param array $cookies
+     * @param array $parameters
      */
     public function __construct
     (
         string $protocolVersion,
         string $httpMethod,
         UriInterface $uri,
-        StreamInterface $body
+        StreamInterface $body,
+        array $cookies,
+        array $parameters
     )
     {
         parent::__construct($protocolVersion, $body);
         $this->httpMethod = $httpMethod;
         $this->uri = $uri;
+        $this->cookies=$cookies;
+        $this->parameters=$parameters;
     }
 
     /**
@@ -48,8 +56,10 @@ class Request extends Message
         $httpMethod = $_SERVER['REQUEST_METHOD'];
         $uri = Uri::createFromGlobals();
         $body = new Stream(fopen('php://input', 'r'));
+        $cookie = $_COOKIE;
+        $parameters = array_merge($_GET, $_POST);
 
-        $request = new self($protocolVersion, $httpMethod, $uri, $body);
+        $request = new self($protocolVersion, $httpMethod, $uri, $body, $cookie, $parameters);
         foreach ($_SERVER as $variableName => $variableValue) {
             if (strpos($variableName, 'HTTP_') !== 0) {
                 continue;
@@ -66,7 +76,7 @@ class Request extends Message
      */
     public function getParameter(string $name)
     {
-        return $_GET[$name];
+        return $this->parameters[$name];
     }
 
     /**
@@ -75,7 +85,7 @@ class Request extends Message
      */
     public function getCookie(string $name)
     {
-        return $_COOKIE[$name];
+        return $this->cookies[$name];
     }
 
     /**
@@ -83,7 +93,6 @@ class Request extends Message
      */
     public function moveUploadedFile(string $path)
     {
-        //TODO
         move_uploaded_file($_FILES, $path);
     }
 
