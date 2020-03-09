@@ -17,7 +17,13 @@ class Request extends Message
      */
     private $uri;
     private $requestTarget;
+    /**
+     * @var array
+     */
     private $cookies;
+    /**
+     * @var array
+     */
     private $parameters;
 
     /**
@@ -42,8 +48,8 @@ class Request extends Message
         parent::__construct($protocolVersion, $body);
         $this->httpMethod = $httpMethod;
         $this->uri = $uri;
-        $this->cookies=$cookies;
-        $this->parameters=$parameters;
+        $this->cookies = $cookies;
+        $this->parameters = $parameters;
     }
 
     /**
@@ -77,6 +83,11 @@ class Request extends Message
     public function getParameter(string $name)
     {
         return $this->parameters[$name];
+    }
+
+    public function getParameters(): array
+    {
+        return $this->parameters;
     }
 
     /**
