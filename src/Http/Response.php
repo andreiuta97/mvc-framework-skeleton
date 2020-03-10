@@ -45,7 +45,7 @@ class Response extends Message
     private function sendHeaders(): void
     {
         foreach ($this->headers as $key => $value) {
-            header($key, implode(', ', $value));
+            header($key .': '.  implode(', ', $value));
         }
     }
 
