@@ -9,6 +9,7 @@ use Framework\Http\Request;
 use Framework\Http\Response;
 use Framework\Routing\RouteMatch;
 use Framework\Contracts\ContainerInterface;
+use Framework\Session\Session;
 use Symfony\Component\DependencyInjection\Reference;
 
 class Application
@@ -34,7 +35,7 @@ class Application
     public function handle(Request $request): Response
     {
         $routeMatch = $this->getRouter()->route($request);
-
+        $this->container->get(Session::class)->start();
         return $this->getDispatcher()->dispatch($routeMatch, $request);
     }
 

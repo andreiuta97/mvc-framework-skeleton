@@ -3,12 +3,14 @@
 use Framework\Contracts\DispatcherInterface;
 use Framework\Contracts\RendererInterface;
 use Framework\Contracts\RouterInterface;
+use Framework\Contracts\SessionInterface;
 use Framework\Controller\UserController;
 use Framework\Contracts\ContainerInterface;
 use Framework\Dispatcher\Dispatcher;
 use Framework\Renderer\Renderer;
 use Framework\Router\Router;
 use Framework\DependencyInjection\SymfonyContainer;
+use Framework\Session\Session;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
