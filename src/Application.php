@@ -35,7 +35,10 @@ class Application
     public function handle(Request $request): Response
     {
         $routeMatch = $this->getRouter()->route($request);
-        $this->container->get(Session::class)->start();
+        if($routeMatch){
+            $session = new Session();
+            $session->start();
+        }
         return $this->getDispatcher()->dispatch($routeMatch, $request);
     }
 
