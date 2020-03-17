@@ -50,7 +50,7 @@ class Router implements RouterInterface
                     $request->getMethod(),
                     $routeConfig[self::CONFIG_KEY_CONTROLLER],
                     $routeConfig[self::CONFIG_KEY_ACTION],
-                    $this->createRequestAttributes($this->createPath($routeConfig[self::CONFIG_KEY_PATH]), $request->getUri()->getPath())
+                    $this->createRequestAttributes($this->createPath($routeConfig[self::CONFIG_KEY_PATH]), $request)
                 );
             }
         }
@@ -70,17 +70,20 @@ class Router implements RouterInterface
     /**
      * Creates an array with the request attributes
      * @param string $path
-     * @param string $request
+     * @param Request $request
      * @return array
      */
-    public function createRequestAttributes(string $path, string $request): array
+    public function createRequestAttributes(string $path, Request $request): array
     {
-        preg_match($path, $request, $matches);
+        preg_match($path, $request->getUri()->getPath(), $matches);
         $requestAttributes = Array();
         foreach ($matches as $key => $value) {
             if (is_string($key)) {
                 $requestAttributes[$key] = $value;
             }
+        }
+        foreach ($request->getParameters() as $key => $value) {
+            $requestAttributes[$key] = $value;
         }
 
         return $requestAttributes;
